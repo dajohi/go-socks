@@ -79,6 +79,7 @@ type Proxy struct {
 	Username     string
 	Password     string
 	TorIsolation bool
+	Timeout      time.Duration
 }
 
 func (p *Proxy) Dial(network, addr string) (net.Conn, error) {
@@ -87,7 +88,9 @@ func (p *Proxy) Dial(network, addr string) (net.Conn, error) {
 }
 
 func (p *Proxy) DialContext(ctx context.Context, network, addr string) (net.Conn, error) {
-	var d net.Dialer
+	var d = net.Dialer{
+		Timeout: p.Timeout,
+	}
 	return p.dial(ctx, &d, network, addr)
 }
 
